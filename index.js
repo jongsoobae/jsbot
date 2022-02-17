@@ -32,14 +32,15 @@ const app = new App({
 
 app.event('message', async ({ event, client, message, logger }) => {
   const { ts, attachments, channel, bot_id: botId } = message
+  logger.info('----------------------------------------')
+  logger.info(`${channel}, ${ts}`)
+
   if (channel !== 'C033X1649LH') return
   let isDel = false
   try {
     isDel = isRemovable(botId, attachments)
   } catch (e) {}
 
-  logger.info('----------------------------------------')
-  logger.info(`${channel}, ${ts}`)
   logger.info(`rem: ${isDel}`)
 
   if (isDel) {
