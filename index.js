@@ -1,14 +1,53 @@
-import express from 'express'
+import pkg from '@slack/bolt'
+const { App } = pkg
+const userToken = process.env.SLACK_USER_TOKEN
 
-const app = express()
-const port = process.env.port || 3000
+const isRemovable = (botId, attachments) => {
+  if (botId !== 'B033JFZE4Q2') return false
+  const attachment = attachments[0]
+  const pretext = attachment.pretext
+  const title = attachment.title
 
-app.use(express.json())
+  if (!pretext.includes('Pull request opened by')) return true
+  return title.includes('D2S') || title.includes('S2M')
+}
 
-app.post('/', (req, res) => {
-  res.send(req.body)
+const deleteSlackMessage = async (client, channel, ts) => {
+  try {
+    await client.chat.delete({
+      channel: channel,
+      ts: ts,
+      token: userToken
+    })
+  } catch (e) {}
+}
+
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  socketMode: true,
+  appToken: process.env.SLACK_APP_TOKEN,
+  port: process.env.PORT || 3000
 })
 
-app.listen(port, () => {
-  console.log(`server on ${port}`)
+app.event('message', async ({ event, client, message, logger }) => {
+  const { ts, attachments, channel, bot_id: botId } = message
+  if (channel !== 'C033X1649LH') return
+  let isDel = false
+  try {
+    isDel = isRemovable(botId, attachments)
+  } catch (e) {}
+
+  logger.info('----------------------------------------')
+  logger.info(`${channel}, ${ts}`)
+  logger.info(`rem: ${isDel}`)
+
+  if (isDel) {
+    // await deleteSlackMessage(client, channel, ts)
+    logger.info(message)
+  }
 })
+;(async () => {
+  await app.start()
+  console.log('⚡️ Bolt app is running!')
+})()

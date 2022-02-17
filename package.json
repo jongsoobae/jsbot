@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@slack/bolt": "^3.9.0",
     "express": "^4.17.2"
   },
   "name": "jsbot",
