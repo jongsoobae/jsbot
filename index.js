@@ -41,11 +41,10 @@ app.event('message', async ({ event, client, message, logger }) => {
     isDel = isRemovable(botId, attachments)
   } catch (e) {}
 
-  logger.info(`rem: ${isDel}`)
+  logger.info(`isDel: ${isDel}`)
 
   if (isDel) {
-    // await deleteSlackMessage(client, channel, ts)
-    logger.info(message)
+    await deleteSlackMessage(client, channel, ts)
   }
 })
 ;(async () => {
