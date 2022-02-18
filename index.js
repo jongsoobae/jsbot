@@ -8,6 +8,7 @@ const isRemovable = (botId, attachments) => {
   const pretext = attachment.pretext
   const title = attachment.title
 
+  if (pretext.includes('dependabot[bot]')) return true
   if (!pretext.includes('Pull request opened by')) return true
   return title.includes('D2S') || title.includes('S2M')
 }
