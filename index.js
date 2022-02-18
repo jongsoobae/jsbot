@@ -46,6 +46,7 @@ app.event('message', async ({ event, client, message, logger }) => {
 
   if (isDel) {
     await deleteSlackMessage(client, channel, ts)
+    console.log(attachments)
   }
 })
 ;(async () => {
