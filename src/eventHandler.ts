@@ -9,7 +9,7 @@ const isRemovable = (botId: string, attachments: Array<any>) => {
 
   if (pretext.includes('dependabot[bot]')) return true
   if (!pretext.includes('Pull request opened by')) return true
-  return title.includes('D2S') || title.includes('S2M')
+  return title.includes('D2S') || title.includes('S2M') || title.includes('D2M')
 }
 
 const deleteSlackMessage = async (
